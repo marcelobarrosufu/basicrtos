@@ -48,7 +48,6 @@ the context saving since R12, R13, R14, R15 are cloberred registers
 that only need to be saved in interrupt service routines.
 
 @todo Improvements in scheduler by adding priority capabilities
-@todo BRTOS_Sleep() need to be created
 
 */
 
@@ -157,6 +156,7 @@ static void BRTOS_ConfigureClock(void)
 	WDTCTL = WDT_MDLY_0_5;
 	usTicksPerSecond = 1000/0.5; /* 2k ticks per second */	
 }
+
 /**
 Initialize BRTOS structures and variables.
 */
@@ -197,15 +197,13 @@ static void BRTOS_Initialize(void)
 This scheduler users a round robin schema to 
 select tasks. If the time slice of current task is active, 
 return the current task. Otherwise, find the next ready task
-and return it.
+and return it. Priorities are not implemented, just the time slice feature.
 
-Priorities are not implemented, just the time slice feature.
-@todo This function could be more efficient if implemented 
-      using pointers instead array. Code first, optimize after.
-       
 @param pri seach for task in this priority level (not used yet)
 @return next task to run
-
+@todo This function could be more efficient if implemented 
+      using pointers/lists instead array. Code first, optimize after.
+       
 */
 static int BRTOS_RoundRobin(int pri)
 {
@@ -337,7 +335,6 @@ dont_save_context_entry:
     /* reti will pop PC and Status from stack (naked function) */
     EnableInterrupts();
     ReturnFromInterrupt();
-
 }
 
 /**

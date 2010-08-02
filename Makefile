@@ -10,9 +10,7 @@ INCLUDE =
 CXX      = msp430-gcc
 OBJDUMP  = msp430-objdump
 OBJCOPY  = msp430-objcopy
-CXXFLAGS = -mmcu=msp430x149  -g -O2
-# debug
-#CXXFLAGS = -O2
+CXXFLAGS = -mmcu=msp430x149 -O2 
 
 # include files
 
@@ -27,7 +25,7 @@ OBJ = $(addsuffix .obj, $(basename $(SRC)))
 
 all: $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $(PROGRAM).elf $(OBJ)
-	$(OBJDUMP) -tDS $(PROGRAM).elf > $(PROGRAM).map
+	$(OBJDUMP) -tDShpGt $(PROGRAM).elf > $(PROGRAM).map
 	$(OBJCOPY) -O ihex $(PROGRAM).elf $(PROGRAM).dhex
 
 %.obj: %.c
