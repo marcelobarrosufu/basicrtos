@@ -24,6 +24,17 @@ Current limitations:
 - Task priorities are not implemented yet
 - Timers and semaphores not implemented yet
 
+\section SECDUSING Using Basic RTOS
+
+- Download a copy of MSPGCC compiler for your host system:
+  http://mspgcc.sourceforge.net/ 
+- You will need to run make. Download a copy of Unix Tools for Windows:
+  http://sourceforge.net/projects/unxutils/
+- Define your tasks inside \ref BRTOS_Application_Initialize() (see file \ref app.c for examples)
+- Check your board clock. We are assuming a 1MHz clock and clock source as MCLK.
+  See \ref BRTOS_ConfigureClock() and BRTOS_Initialize().  
+- Go to brtos directory and type make to compile the code. Download it to your board.
+
 \section SECDCRED Credits
 
 Original author:

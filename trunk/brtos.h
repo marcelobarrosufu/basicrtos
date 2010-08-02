@@ -26,7 +26,7 @@ The views and conclusions contained in the software and documentation are those 
 
 
 #define BRTOS_MAX_PRIORITY_LEVELS  8
-#define BRTOS_MAX_TASKS            8
+#define BRTOS_MAX_TASKS            5
 #define BRTOS_NO_TASK_TO_RUN      (BRTOS_MAX_TASKS+1)
 
 /* eight priority levels */
