@@ -148,7 +148,7 @@ static void BRTOS_TaskEnd(void)
 /**
 Startup and configure the system clock. Used to define
 the amount of ticks per second in RTOS. The schedule is
-execute at each tick.
+executed at each tick.
 */
 static void BRTOS_ConfigureClock(void)
 {
@@ -264,6 +264,7 @@ static int BRTOS_ProcessTimers(void)
 }
 /**
 Check sleeping tasks and update their status.
+@todo may be optimized using a list of tasks in sleep state
 */
 static int BRTOS_SleepTasks(void)
 {
@@ -305,28 +306,27 @@ NAKED( BRTOS_Scheduler )
 {
 save_context_entry:
 
-		SaveContext();
-		SaveStackPointer();
-		RestoreSchedStackPointer();
+    SaveContext();
+    SaveStackPointer();
+    RestoreSchedStackPointer();
   	
 dont_save_context_entry:
 
-    if(BRTOS_ProcessTimers())
+    /* Update timers */
+    BRTOS_ProcessTimers();
+    /* check sleeping tasks */
+    BRTOS_SleepTasks();
+    /* Get the next task to run */
+    ucCurrentTask = BRTOS_RoundRobin(ucCurrentPriLevel);
+
+    if(ucCurrentTask == BRTOS_NO_TASK_TO_RUN)
     {
-      /* check sleeping tasks */
-      BRTOS_SleepTasks();
-		  /* Get the next task to run */
-		  ucCurrentTask = BRTOS_RoundRobin(ucCurrentPriLevel);
-
-		  if(ucCurrentTask == BRTOS_NO_TASK_TO_RUN)
-		  {
-			  /* nothing to do: sleep */
-			  GoToLowPowerMode3();
-			  goto dont_save_context_entry;
-		  }
-
+        /* nothing to do: sleep */
+        GoToLowPowerMode3();
+        goto dont_save_context_entry;
     }
 
+    /* save scheduler context */
     SaveSchedStackPointer();
     /* restore stack pointer */
     RestoreStackPointer();
