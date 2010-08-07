@@ -352,7 +352,7 @@ int main(void)
 	/* initialize control structures and create all user tasks */
 	BRTOS_Initialize();
 
-	/* call user initialization */
+	/* call user initialization: you must create at least one thread */
 	BRTOS_Application_Initialize();
 	
     /* the stack pointer should point to the first available task stack,
@@ -465,10 +465,14 @@ Put the calling task to sleep (user level).
 void BRTOS_Sleep(unsigned short usTime)
 {
 
+    unsigned short t = MSEC_TO_TICKS(usTime);
+    if(t == 0)
+        return;
+        
     DisableInterrupts();
 
     /* put the task to sleep */
-    asBrtosTasks[ucCurrentTask].usSleepTicks = MSEC_TO_TICKS(usTime);
+    asBrtosTasks[ucCurrentTask].usSleepTicks = t;
     asBrtosTasks[ucCurrentTask].ucTaskState  = BRTOS_TASK_STATE_SLEEPING;
 
     _Sleep();
